@@ -1,0 +1,56 @@
+/*
+ * Shared keymap definitions for foostan Corne and Eyelash Corne.
+ *
+ * Each layer is split into 8 chunks (top/mid/bot rows × left/right halves,
+ * plus left/right thumb clusters). Both keymaps assemble these chunks into
+ * their respective matrices. The Eyelash Corne adds extra entries between
+ * the halves for the joystick (UP/LEFT/CLICK/RIGHT/DOWN) and encoder click.
+ *
+ * Layer numbers must be kept in sync with the layer order declared in each
+ * keymap file.
+ */
+
+#define LAYER_DEFAULT  0
+#define LAYER_NUMBERS  1
+#define LAYER_SYMBOLS  2
+#define LAYER_SETTINGS 3
+
+/* ---------- Default layer ---------- */
+#define DEF_L_TOP    &kp TAB              &kp Q  &kp W  &kp E     &kp R  &kp T
+#define DEF_R_TOP    &kp Y                &kp U  &kp I  &kp O     &kp P  &kp BACKSPACE
+#define DEF_L_MID    &mt LEFT_SHIFT CAPS  &kp A  &kp S  &kp D     &kp F  &kp G
+#define DEF_R_MID    &kp H                &kp J  &kp K  &kp L     &kp SEMI  &kp SQT
+#define DEF_L_BOT    &kp LEFT_CONTROL     &kp Z  &kp X  &kp C     &kp V  &kp B
+#define DEF_R_BOT    &kp N                &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESCAPE
+#define DEF_L_THUMB  &kp LCMD             &mo LAYER_NUMBERS         &lt LAYER_SYMBOLS SPACE
+#define DEF_R_THUMB  &lt LAYER_SYMBOLS ENTER  &lt LAYER_NUMBERS K_CONTEXT_MENU  &mt LEFT_ALT LEFT_BRACKET
+
+/* ---------- Numbers layer ---------- */
+#define NUM_L_TOP    &trans   &kp N1  &kp N2  &kp N3     &kp N4   &kp N5
+#define NUM_R_TOP    &kp N6   &kp N7  &kp N8  &kp N9     &kp N0   &trans
+#define NUM_L_MID    &trans   &trans  &trans  &kp COLON  &kp DOT  &kp COMMA
+#define NUM_R_MID    &kp LEFT &kp DOWN &kp UP &kp RIGHT  &trans   &trans
+#define NUM_L_BOT    &kp F12  &kp F1  &kp F2  &kp F3     &kp F4   &kp F5
+#define NUM_R_BOT    &kp F6   &kp F7  &kp F8  &kp F9     &kp F10  &kp F11
+#define NUM_L_THUMB  &trans   &trans  &trans
+#define NUM_R_THUMB  &trans   &trans  &trans
+
+/* ---------- Symbols layer ---------- */
+#define SYM_L_TOP    &kp TILDE  &kp EXCL   &kp AT    &kp HASH       &kp DLLR          &kp PERCENT
+#define SYM_R_TOP    &kp ASTERISK  &kp LPAR  &kp RPAR  &kp MINUS  &kp EQUAL  &trans
+#define SYM_L_MID    &trans     &kp CARET  &kp AMPS  &kp PLUS       &kp MINUS         &kp UNDER
+#define SYM_R_MID    &kp GRAVE  &kp LEFT_BRACKET  &kp RBKT  &kp SLASH  &kp COLON  &trans
+#define SYM_L_BOT    &trans     &trans     &kp PIPE  &kp LESS_THAN  &kp GREATER_THAN  &kp DOT
+#define SYM_R_BOT    &kp COMMA  &kp LBRC  &kp RBRC  &kp BACKSLASH  &kp QUESTION  &trans
+#define SYM_L_THUMB  &trans     &trans     &trans
+#define SYM_R_THUMB  &trans     &trans     &trans
+
+/* ---------- Settings layer (bluetooth / media) ---------- */
+#define SET_L_TOP    &trans      &trans        &trans        &trans        &trans        &trans
+#define SET_R_TOP    &trans      &trans        &trans        &trans        &trans        &trans
+#define SET_L_MID    &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
+#define SET_R_MID    &trans      &kp C_VOL_DN  &kp C_VOL_UP  &kp C_MUTE    &trans        &trans
+#define SET_L_BOT    &trans      &trans        &trans        &trans        &trans        &trans
+#define SET_R_BOT    &trans      &trans        &trans        &trans        &trans        &trans
+#define SET_L_THUMB  &trans      &trans        &trans
+#define SET_R_THUMB  &trans      &trans        &trans

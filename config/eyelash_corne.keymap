@@ -1,0 +1,122 @@
+/*
+ * Eyelash Corne keymap.
+ *
+ * Reuses shared_keymap.dtsi with the foostan Corne. The eyelash board has
+ * extra physical inputs interleaved into the matrix:
+ *   row 1: joystick UP (between halves)
+ *   row 2: joystick LEFT, joystick CLICK, joystick RIGHT (between halves)
+ *   row 3: encoder click (after left half), joystick DOWN (before right half)
+ * Plus a rotary encoder providing sensor-bindings (volume by default).
+ */
+
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 1200
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 25
+
+#include <input/processors.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/pointing.h>
+#include <dt-bindings/zmk/rgb.h>
+
+#include "shared_keymap.dtsi"
+
+&mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
+&msc_input_listener { input-processors = <&zip_scroll_scaler 2 1>; };
+
+&msc {
+    acceleration-exponent = <1>;
+    time-to-max-speed-ms = <100>;
+    delay-ms = <0>;
+};
+
+&mmv {
+    time-to-max-speed-ms = <500>;
+    acceleration-exponent = <1>;
+    trigger-period-ms = <16>;
+};
+
+&soft_off { hold-time-ms = <2000>; };
+
+/ {
+    scroll_encoder: scroll_encoder {
+        compatible = "zmk,behavior-sensor-rotate";
+        #sensor-binding-cells = <0>;
+        bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+        tap-ms = <100>;
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        // Hold Q + S + Z for 2s to power off (positions are eyelash-specific)
+        softoff {
+            bindings = <&soft_off>;
+            key-positions = <1 15 29>;
+        };
+
+        settings_layer {
+            bindings = <&mo LAYER_SETTINGS>;
+            key-positions = <43 46>;
+        };
+
+        delete {
+            bindings = <&kp DEL>;
+            key-positions = <12 47>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "QWERTY";
+            // Center extras: joystick = mouse move, click = LCLK,
+            // encoder click = MUTE, encoder rotate = volume.
+            bindings = <
+                DEF_L_TOP                                              &mmv MOVE_UP                       DEF_R_TOP
+                DEF_L_MID    &mmv MOVE_LEFT  &mkp LCLK  &mmv MOVE_RIGHT                                  DEF_R_MID
+                DEF_L_BOT    &kp C_MUTE  &mmv MOVE_DOWN                                                  DEF_R_BOT
+                                              DEF_L_THUMB  DEF_R_THUMB
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOL_DN>;
+        };
+
+        numbers_layer {
+            display-name = "NUMBERS";
+            // Center extras: joystick → arrow keys, click → ENTER, encoder → scroll
+            bindings = <
+                NUM_L_TOP                          &kp UP                       NUM_R_TOP
+                NUM_L_MID    &kp LEFT  &kp ENTER  &kp RIGHT                     NUM_R_MID
+                NUM_L_BOT    &trans  &kp DOWN                                   NUM_R_BOT
+                                       NUM_L_THUMB  NUM_R_THUMB
+            >;
+            sensor-bindings = <&scroll_encoder>;
+        };
+
+        symbols_layer {
+            display-name = "SYMBOLS";
+            bindings = <
+                SYM_L_TOP                            &trans                             SYM_R_TOP
+                SYM_L_MID    &trans  &trans  &trans                                     SYM_R_MID
+                SYM_L_BOT    &trans  &trans                                             SYM_R_BOT
+                                       SYM_L_THUMB  SYM_R_THUMB
+            >;
+            sensor-bindings = <&inc_dec_kp PG_DN PG_UP>;
+        };
+
+        settings_layer {
+            display-name = "SETTINGS";
+            // Joystick: UP/DOWN = brightness, LEFT/RIGHT = off/on, CLICK = cycle effect.
+            bindings = <
+                SET_L_TOP                            &rgb_ug RGB_BRI                            SET_R_TOP
+                SET_L_MID    &rgb_ug RGB_OFF  &rgb_ug RGB_EFF  &rgb_ug RGB_ON                  SET_R_MID
+                SET_L_BOT    &rgb_ug RGB_SPI  &rgb_ug RGB_BRD                                  SET_R_BOT
+                                       SET_L_THUMB  SET_R_THUMB
+            >;
+            sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
+        };
+    };
+};
